@@ -1,0 +1,8 @@
+.git
+.local
+**/bin
+**/obj
+**/*private*key*.json
+**/*service-account*.json
+appsettings.json
+appsettings.Development.json

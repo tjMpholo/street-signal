@@ -1,0 +1,4 @@
+@page
+@model StreetSignal.Dashboard.Pages.LoginModel
+@{ViewData["Title"]="Official sign-in";}
+<main style="max-width:520px;padding-top:80px"><a class="brand" href="/">◉ street signal.</a><section class="panel" style="margin-top:30px"><h1>Official sign-in</h1><p>Sign in with your authorized municipal account.</p><form method="post" class="alertform"><div asp-validation-summary="All" class="validation" role="alert"></div><label asp-for="Email"></label><input asp-for="Email" type="email" autocomplete="username" maxlength="254" required/><label asp-for="Password"></label><input name="Password" id="Password" type="password" autocomplete="current-password" maxlength="1024" required/><button>Sign in</button></form><p style="margin-top:18px">Access is restricted to assigned areas. Contact your administrator if you need access.</p></section></main>

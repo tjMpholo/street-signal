@@ -1,0 +1,18 @@
+@page
+@model StreetSignal.Dashboard.Pages.LiveModel
+@{ViewData["Title"]="Live operations";}
+<partial name="_LiveSidebar" model='@(("Live",Model.Area))'/><div class="main"><main><div class="heading"><div><a class="brand" href="/Live">◉ street signal.</a><h1>Live operations</h1><p>Firebase-connected reports and official alerts · Times in SAST</p></div><form method="post" asp-page="/Login" asp-page-handler="Logout"><button class="subtle">Sign out</button></form></div>
+<div class="banner"><strong>Live Firebase workspace</strong> Alerts published here reach residents. <a href="/Overview?Area=@Uri.EscapeDataString(Model.Area)">View community overview ↗</a></div>
+@if(Model.Areas.Length==0){
+<section class="panel"><h2>No areas yet</h2><p>Your admin account is ready. Areas will appear when residents set up their homes in the mobile app. Refresh this page after the first area is created.</p><a href="/Live">Refresh areas ↻</a></section>
+}else{
+<form method="get"><label for="area">Your assigned areas</label><select name="Area" id="area">@foreach(var a in Model.Areas){<option selected="@(Model.Area==a)">@a</option>}</select><button>Refresh reports</button></form>
+@if(Model.Notice!=null){<div class="notice" role="status">@Model.Notice</div>}
+@if(Model.Error!=null){<div class="banner" role="alert">@Model.Error</div>}
+@if(Model.IndexSetupUrl!=null){<p><a href="@Model.IndexSetupUrl" target="_blank" rel="noopener noreferrer">Create required Firebase index ↗</a></p>}
+<section class="panel" style="margin-top:25px"><h2>Resident incident queue</h2><p>Reports in the last eight weeks · grouped in fixed three-hour windows</p><div class="tablewrap"><table><thead><tr><th>SERVICE / PROBLEM</th><th>HOUSEHOLDS</th><th>FIRST REPORT · SAST</th><th>STATUS</th><th>ACTION</th></tr></thead><tbody>@foreach(var item in Model.Incidents){<tr><td>@item.Service · @item.Problem.Replace('_',' ')@if(item.Pilot){<small>Pilot data</small>}</td><td>@item.Homes<small>@item.People people</small></td><td>@item.First.AddHours(2).ToString("dd MMM yyyy HH:mm")</td><td>@item.State</td><td>@if(item.State!="resolved"){<form method="post" asp-page-handler="Incident"><input type="hidden" name="Area" value="@Model.Area"/><input type="hidden" name="id" value="@item.Id"/>@if(item.State=="suspected"){<button name="state" value="confirmed" class="subtle">Confirm</button>}<button name="state" value="resolved" class="subtle">Resolve</button></form>}</td></tr>}</tbody></table></div>@if(Model.Incidents.Length==0&&Model.Error==null){<p>No reports in this area in the last eight weeks.</p>}</section>
+<section class="panel" style="max-width:700px"><h2>Publish an official alert</h2><p>This action writes to Firebase and can appear on residents’ phones.</p><form method="post" asp-page-handler="Alert" class="alertform"><input type="hidden" name="Area" value="@Model.Area"/><div asp-validation-summary="All" class="validation"></div><label asp-for="Input.Area">Recipient area</label><select asp-for="Input.Area">@foreach(var a in Model.Areas){<option>@a</option>}</select><label asp-for="Input.Service">Service</label><select asp-for="Input.Service"><option value="water">Water</option><option value="electricity">Electricity</option></select><label asp-for="Input.Title">Title</label><input asp-for="Input.Title" required maxlength="120"/><label asp-for="Input.Body">Message</label><textarea asp-for="Input.Body" required maxlength="1000" rows="5"></textarea><button>Publish official alert</button></form></section>
+}
+</main></div>
+
+

@@ -1,0 +1,11 @@
+.git
+.local
+**/bin
+**/obj
+tests
+appsettings.json
+appsettings.Development.json
+Properties
+**/*private*key*.json
+**/*service-account*.json
+**/*.log

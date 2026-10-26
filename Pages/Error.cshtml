@@ -1,0 +1,4 @@
+@page
+@model ErrorModel
+@{ViewData["Title"]="Something went wrong";}
+<main style="max-width:650px"><section class="panel"><h1>Something went wrong</h1><p>Please refresh the page or try again shortly.</p>@if(Model.ShowRequestId){<p>Reference: <code>@Model.RequestId</code></p>}<a href="/Overview">Return to dashboard</a></section></main>
